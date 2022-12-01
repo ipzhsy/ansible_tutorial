@@ -1,0 +1,29 @@
+---
+
+- hosts: all
+  become: true
+  tasks: 
+
+  - name: httpd installed
+    ansible.builtin.yum:
+      name: httpd
+      state: latest
+
+  - name: custom index.html
+    ansible.builtin.copy:
+      dest: /var/www/html/index.html
+      content: |
+                Hello this is my first ansible deployment
+
+  - name: httpd service enabled
+    ansible.builtin.service:
+      name: httpd
+      enabled: true
+      state: started
+
+  - name: open firewall
+    ansible.posix.firewalld:
+      service: http
+      state: disabled
+      immediate: true
+      permanent: true
